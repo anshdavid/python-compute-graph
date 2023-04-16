@@ -39,3 +39,5 @@ To serve as a backend from a simple `Node Editor` or `Visual Programming Tool`
     input_node_b.GetInterfaceByName("input_node_b_string_data").UpdateValue("working")
 
     print(concate_node.GetSocketByName("concat_node_socket_out_c").GetValue() == "developer_working)
+    
+**Test Samples [here](./test) # It works!**
