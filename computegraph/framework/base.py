@@ -189,6 +189,12 @@ class BaseNode(BaseItem, AbstractNode):
     def operations(self) -> List[BaseOperation]:
         return self._operations
 
+    def GetSocketByName(self, name: str):
+        raise NotImplementedError("")
+
+    def GetInterfaceByName(self, name: str):
+        raise NotImplementedError("")
+
     def GetValues(self) -> Dict:
         raise NotImplementedError("")
 

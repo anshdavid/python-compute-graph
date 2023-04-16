@@ -5,6 +5,8 @@ from computegraph.package.data_items import Boolean, String
 from computegraph.framework.node import CGNode
 from operator import ior, iand, not_
 
+from computegraph.package.string_concat import concat_node, string_node
+
 
 class TestClass(unittest.TestCase):
     def test_simple_operation(self):
@@ -46,42 +48,20 @@ class TestClass(unittest.TestCase):
         self.assertEqual(bool_out_1.GetValue(), False)
 
     def test_concat_node(self):
-        def concate_operation(a, b):
-            return "_".join([a, b])
+        input_node_a = string_node("input_node_a", "developer")
+        input_node_b = string_node("input_node_b", "")
+        concate_node = concat_node("concat_node")
 
-        node_a = CGNode("node_a")
-        node_a_data_a = node_a.AddData("node_a_data_a", String("developer"))
-        node_a_socket_out_a = node_a.AddSocket("node_a_socket_out_a", SocketTypeEnum.OUTPUT)
-        node_a_socket_out_a.SetDataInterface(node_a_data_a)
-
-        node_b = CGNode("node_b")
-        node_b_data_b = node_b.AddData("node_b_data_b", String(""))
-        node_b_socket_out_b = node_b.AddSocket("node_b_socket_out_b", SocketTypeEnum.OUTPUT)
-        node_b_socket_out_b.SetDataInterface(node_b_data_b)
-
-        concate_node = CGNode("concate_node")
-
-        concate_node_data_a = concate_node.AddData("concate_node_data_a", String(""))
-        concate_node_data_b = concate_node.AddData("concate_node_data_b", String(""))
-        concate_node_data_c = concate_node.AddData("concate_node_data_c", String(""))
-
-        concate_node_socket_in_a = concate_node.AddSocket("concate_node_socket_in_a", SocketTypeEnum.INPUT)
-        concate_node_socket_in_b = concate_node.AddSocket("concate_node_socket_in_b", SocketTypeEnum.INPUT)
-        concate_node_socket_out_c = concate_node.AddSocket("concate_node_socket_out_c", SocketTypeEnum.OUTPUT)
-
-        concate_node_socket_in_a.SetDataInterface(concate_node_data_a)
-        concate_node_socket_in_b.SetDataInterface(concate_node_data_b)
-        concate_node_socket_out_c.SetDataInterface(concate_node_data_c)
-
-        concate_node.AddOperation(
-            "concate_operation",
-            ["concate_node_data_a", "concate_node_data_b"],
-            ["concate_node_data_c"],
-            concate_operation,
+        input_node_a.GetSocketByName("input_node_a_socket_out").Connect(  # type:ignore
+            concate_node.GetSocketByName("concat_node_socket_in_a")
+        )
+        input_node_b.GetSocketByName("input_node_b_socket_out").Connect(  # type:ignore
+            concate_node.GetSocketByName("concat_node_socket_in_b")
         )
 
-        node_a_socket_out_a.Connect(concate_node_socket_in_a)
-        node_b_socket_out_b.Connect(concate_node_socket_in_b)
+        input_node_b.GetInterfaceByName("input_node_b_string_data").UpdateValue("working")  # type:ignore
 
-        node_b_data_b.UpdateValue("working")
-        self.assertEqual(concate_node_socket_out_c.GetValue(), "developer_working")
+        self.assertEqual(
+            concate_node.GetSocketByName("concat_node_socket_out_c").GetValue(),  # type:ignore
+            "developer_working",
+        )

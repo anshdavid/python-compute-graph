@@ -35,10 +35,10 @@ Todo:
 
 from __future__ import annotations
 import logging
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, List, Optional
 from computegraph.framework.abstract import CGProtocolDataItem
 
-from computegraph.framework.base import BaseNode, BaseOperation, SocketTypeEnum
+from computegraph.framework.base import BaseDataInterface, BaseNode, BaseOperation, BaseSocket, SocketTypeEnum
 from computegraph.framework.data import CGDataInterface
 from computegraph.framework.operation import CGOperation
 from computegraph.framework.socket import CGSocket
@@ -46,6 +46,16 @@ from computegraph.utils import UUID
 
 
 class CGNode(BaseNode):
+    def GetSocketByName(self, name: str) -> Optional[BaseSocket]:
+        if socket := [socket for socket in self.sockets if socket.name == name]:
+            return socket[0]
+        return None
+
+    def GetInterfaceByName(self, name: str) -> Optional[BaseDataInterface]:
+        if interface := [interface for interface in self.data_interfaces if interface.name == name]:
+            return interface[0]
+        return None
+
     def GetValues(self) -> Dict:
         return {interface.name: interface.GetValue() for interface in self.data_interfaces}
 
@@ -112,6 +122,7 @@ class CGNode(BaseNode):
         for input_ in inputs:
             if input_ not in available_data:
                 logging.error(f"operation input with name:`{input_}` no available in node name:`{self.name}'")
+                print("---", available_data)
                 exit()
 
         for output in outputs:

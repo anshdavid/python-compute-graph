@@ -166,6 +166,14 @@ class AbstractNode(ABC):
         ...
 
     @abstractmethod
+    def GetSocketByName(self):
+        ...
+
+    @abstractmethod
+    def GetInterfaceByName(self):
+        ...
+
+    @abstractmethod
     def SetValues(self, *args, **kwargs):
         ...
 

@@ -48,11 +48,11 @@ from computegraph.framework.base import BaseNetwork, BaseOperation
 class CGNetwork(BaseNetwork):
     class ProcessData(str):
         def __repr__(self):
-            return f"ProcessData({self})"
+            return f"ProcessData:`{self}`"
 
     class DeleteInstruction(str):
         def __repr__(self):
-            return f"DeleteInstruction({self})"
+            return f"DeleteInstruction:`{self}`"
 
     class COMPUTE_METHOD(IntEnum):
         SEQUENTIAL = auto()
